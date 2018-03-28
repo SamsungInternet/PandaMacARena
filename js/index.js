@@ -12,7 +12,11 @@ var vrDisplay,
     panda,
     raycaster = new THREE.Raycaster();
 
-var songElement = document.getElementById('song');
+// TEMP
+window.onerror = function(msg, url, linenumber) {
+  alert('Error message: ' + msg + '\nURL: ' + url + '\nLine Number: ' + linenumber);
+  return true;
+}
 
 THREE.ARUtils.getARDisplay().then(function (display) {
   if (display) {
