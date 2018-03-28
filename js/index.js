@@ -72,7 +72,7 @@ function init() {
     panda.scale.set(10, 10, 10);
 
     // Place nearby
-    panda.position.set(15, 15, 15);
+    panda.position.set(25, 0, 25);
 
     panda.rotation.set(0, Math.PI / 2, 0);
 
@@ -84,6 +84,18 @@ function init() {
     update();
 
   });
+
+  // TEMP
+  var cube = new THREE.Mesh(
+    new THREE.BoxGeometry(10, 10, 10),
+    new THREE.MeshBasicMaterial({
+        color: 0xff0000
+    })
+  );
+
+  cube.position.set(20, 0, 20);
+
+  scene.add(cube);
 
   // Lights
   ambientLight = new THREE.AmbientLight(0x660000);
