@@ -101,7 +101,7 @@ function init() {
   scene.add(cube);
 
   // Lights
-  ambientLight = new THREE.AmbientLight(0x660000);
+  ambientLight = new THREE.AmbientLight(0xaaaaaa);
   scene.add(ambientLight);
 
   var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
