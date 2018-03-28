@@ -9,11 +9,10 @@
   <body>
     <a-scene>
       <a-assets>
-        <a-asset-item src="duck-obj" src="models/rubber-duck.obj"></a-asset-item>
-        <a-asset-item src="duck-mtl" src="models/rubber-duck.mtl"></a-asset-item>
+        <a-asset-item id="panda" src="models/panda.glb"></a-asset-item>
       </a-assets>
       <a-entity position="-25 -12 -25" rotation="0 130 2">
-          <a-entity xr="ar: true; vr: false; magicWindow: true" obj-model="obj: #duck-obj; mtl: #duck-mtl" scale="8 8 8"></a-entity>
+          <a-entity xr="ar: true; vr: false; magicWindow: true" gltf-model="#panda" scale="25 25 25"></a-entity>
       </a-entity>
     </a-scene>
   </body>
