@@ -10,6 +10,9 @@ var vrDisplay,
     scene,
     renderer,
     panda,
+    ambientLight,
+    directionalLight,
+    loadingMessage,
     raycaster = new THREE.Raycaster();
 
 // TEMP
@@ -61,13 +64,15 @@ function init() {
 
     console.log('Loaded panda model', gltf);
 
-    panda = gltf;
+    loadingMessage.style.display = 'none';
+
+    panda = gltf.scene;
 
     // Scale to a more sensible size
-    panda.scale.set(20, 20, 20);
+    panda.scale.set(10, 10, 10);
 
     // Place nearby
-    panda.position.set(20, 20, 20);
+    panda.position.set(15, 15, 15);
 
     panda.rotation.set(0, Math.PI / 2, 0);
 
@@ -79,6 +84,17 @@ function init() {
     update();
 
   });
+
+  // Lights
+  ambientLight = new THREE.AmbientLight(0x660000);
+  scene.add(ambientLight);
+
+  var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(1, 0, 1).normalize();
+  scene.add(directionalLight);
+
+  loadingMessage = document.getElementById('loading');
+
 }
 
 function update() {

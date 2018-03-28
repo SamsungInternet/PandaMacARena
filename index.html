@@ -9,19 +9,20 @@
     <script src="js/lib/GLTFLoader.js"></script>
     <script src="js/lib/three.ar.js"></script>
     <script src="js/index.js"></script>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      #loading {
+        position: absolute;
+        color: #fff;
+        font-size: 2em;
+        margin: 1em 0 0 1em;
+      }
+    </style>
   </head>
   <body>
-    <a-scene>
-      <a-assets>
-        <a-asset-item id="panda" src="models/panda.glb"></a-asset-item>
-      </a-assets>
-
-
-
-
-      <a-entity position="-25 -12 -25" rotation="0 130 2" xr="ar: true;" gltf-model="#panda" scale="25 25 25"></a-entity>
-      <a-sky color="#ECECEC" side="back" xr="ar: false"></a-sky>
-    </a-scene>
+    <p id="loading">Loading...</p>
   </body>
-
 </html>

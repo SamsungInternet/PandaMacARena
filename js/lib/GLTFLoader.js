@@ -6,8 +6,6 @@
  * @author Don McCurdy / https://www.donmccurdy.com
  */
 
-alert('THREE.LoaderUtils', THREE.LoaderUtils);
-
 THREE.GLTFLoader = ( function () {
 
 	function GLTFLoader( manager ) {
