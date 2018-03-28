@@ -35,9 +35,6 @@ function init() {
 
   console.log('Initialise');
 
-  //var arDebug = new THREE.ARDebug(vrDisplay);
-  //document.body.appendChild(arDebug.getElement());
-
   renderer = new THREE.WebGLRenderer({ alpha: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -45,6 +42,14 @@ function init() {
   canvas = renderer.domElement;
   document.body.appendChild(canvas);
   scene = new THREE.Scene();
+
+  // Show surfaces
+  var arDebug = new THREE.ARDebug(vrDisplay, scene, {
+    showLastHit: false,
+    showPoseStatus: false,
+    showPlanes: true,
+  });
+  document.body.appendChild(arDebug.getElement());
 
   arView = new THREE.ARView(vrDisplay, renderer);
 
@@ -69,12 +74,10 @@ function init() {
     panda = gltf.scene;
 
     // Scale to a more sensible size
-    panda.scale.set(10, 10, 10);
+    panda.scale.set(3, 3, 3);
 
-    // Place nearby
-    panda.position.set(25, 0, 25);
-
-    panda.rotation.set(0, Math.PI / 2, 0);
+    // Place far away, until we tap to place on a surface
+    panda.position.set(10000, 10000, 10000);
 
     scene.add(panda);
 
@@ -114,12 +117,14 @@ function update() {
   renderer.clearColor();
   arView.render();
 
-  vrControls.update();
+  camera.updateProjectionMatrix();
 
-  vrDisplay.requestAnimationFrame(update);
+  vrControls.update();
 
   renderer.clearDepth();
   renderer.render(scene, camera);
+
+  vrDisplay.requestAnimationFrame(update);
 
 }
 
