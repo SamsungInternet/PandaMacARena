@@ -1,16 +1,133 @@
-var iframe = document.getElementById('');
-var urlid = '7w7pAfrCfjovwykkEeRFLGw5SXS';
+/**
+ * Made with help from the three.ar.js examples:
+ * https://github.com/google-ar/three.ar.js/tree/master/examples
+ */
+var vrDisplay,
+    vrControls,
+    arView,
+    canvas,
+    camera,
+    scene,
+    renderer,
+    panda,
+    raycaster = new THREE.Raycaster();
 
-var client = new Sketchfab(iframe);
+var songElement = document.getElementById('song');
 
-client.init( urlid, {
-    success: function onSuccess( api ) {
-        api.start();
-        api.addEventListener('viewerready', function() {
-            console.log('Viewer is ready');
-        });
-    },
-    error: function onError(error) {
-        console.log('Viewer error', error);
-    }
+THREE.ARUtils.getARDisplay().then(function (display) {
+  if (display) {
+    vrDisplay = display;
+    init();
+  } else {
+    console.warn('Unsupported');
+    THREE.ARUtils.displayUnsupportedMessage();
+  }
 });
+
+function init() {
+
+  console.log('Initialise');
+
+  //var arDebug = new THREE.ARDebug(vrDisplay);
+  //document.body.appendChild(arDebug.getElement());
+
+  renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.autoClear = false;
+  canvas = renderer.domElement;
+  document.body.appendChild(canvas);
+  scene = new THREE.Scene();
+
+  arView = new THREE.ARView(vrDisplay, renderer);
+
+  camera = new THREE.ARPerspectiveCamera(
+    vrDisplay,
+    60,
+    window.innerWidth / window.innerHeight,
+    vrDisplay.depthNear,
+    vrDisplay.depthFar
+  );
+
+  vrControls = new THREE.VRControls(camera);
+
+  // Create the panda and add it to the scene.
+  var loader = new THREE.GLTFLoader();
+  loader.load('models/panda.glb', function (gltf) {
+
+    console.log('Loaded panda model', gltf);
+
+    panda = gltf;
+
+    // Scale to a more sensible size
+    panda.scale.set(20, 20, 20);
+
+    // Place nearby
+    panda.position.set(20, 20, 20);
+
+    panda.rotation.set(0, Math.PI / 2, 0);
+
+    scene.add(panda);
+
+    window.addEventListener('resize', onWindowResize, false);
+    canvas.addEventListener('touchstart', onClick, false);
+
+    update();
+
+  });
+}
+
+function update() {
+
+  renderer.clearColor();
+  arView.render();
+
+  vrControls.update();
+
+  vrDisplay.requestAnimationFrame(update);
+
+  renderer.clearDepth();
+  renderer.render(scene, camera);
+
+}
+
+function onWindowResize () {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function onClick (e) {
+
+  if (!e.touches[0]) {
+    return;
+  }
+
+  var x = e.touches[0].pageX;
+  var y = e.touches[0].pageY;
+
+  var hit = hitTestSurface(x, y);
+
+  var moveEasingValue = 1;
+  var applyOrientation = true;
+
+  if (hit) {
+    THREE.ARUtils.placeObjectAtHit(panda, hit, moveEasingValue, applyOrientation);
+    panda.rotation.y += Math.PI / 2;
+  }
+}
+
+function hitTestSurface(x, y) {
+
+  // We need to transform x and y into being between 0 and 1
+
+  var normalisedX = x / window.innerWidth;
+  var normalisedY = y / window.innerHeight;
+
+  // Send a ray from point of click to real world surface and attempt to find a hit. Returns an array of potential hits.
+  var hits = vrDisplay.hitTest(normalisedX, normalisedY);
+
+  // If a hit is found, just use the first one
+  return (hits && hits.length) ? hits[0] : null;
+
+}

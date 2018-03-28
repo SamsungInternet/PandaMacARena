@@ -3,17 +3,24 @@
   <head>
     <meta charset="UTF-8">
     <title>LuchAR Libre</title>
-    <script src="js/lib/aframe-master.js"></script>
-    <script src="js/lib/three.xr.js"></script>
-    <script src="js/lib/aframe-xr.js"></script>
+    <script src="js/lib/three.js"></script>
+    <script src="js/lib/Projector.js"></script>
+    <script src="js/lib/VRControls.js"></script>
+    <script src="js/lib/three.ar.js"></script>
+    <script src="js/index.js"></script>
   </head>
   <body>
     <a-scene>
       <a-assets>
         <a-asset-item id="panda" src="models/panda.glb"></a-asset-item>
       </a-assets>
+
+
+
+
       <a-entity position="-25 -12 -25" rotation="0 130 2" xr="ar: true;" gltf-model="#panda" scale="25 25 25"></a-entity>
       <a-sky color="#ECECEC" side="back" xr="ar: false"></a-sky>
     </a-scene>
   </body>
+
 </html>
