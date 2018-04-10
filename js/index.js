@@ -1,7 +1,7 @@
 /**
  * Made with help from the three.ar.js examples:
  * https://github.com/google-ar/three.ar.js/tree/master/examples
- * 
+ *
  * And with help from Ada's logo test demo:
  * https://glitch.com/edit/#!/logo-test
  */
@@ -83,11 +83,11 @@ function init() {
     console.log('gltf', gltf);
 
     // Scale to a more sensible size
-    panda.scale.set(3, 3, 3);
+    panda.scale.set(0.3, 0.3, 0.3);
 
     // Place far away, until we tap to place on a surface
     panda.position.set(10000, 10000, 10000);
-    
+
     // Animation
 
     mixer = new THREE.AnimationMixer( panda );
@@ -111,7 +111,7 @@ function init() {
   ambientLight = new THREE.AmbientLight(0xaaaaaa);
   scene.add(ambientLight);
 
-  var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(1, 0, 1).normalize();
   scene.add(directionalLight);
 
