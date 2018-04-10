@@ -86,18 +86,12 @@ function init() {
     panda.scale.set(3, 3, 3);
 
     // Place far away, until we tap to place on a surface
-    //panda.position.set(10000, 10000, 10000);
-    panda.position.set(0, 1, 10);
-
+    panda.position.set(10000, 10000, 10000);
+    
     // Animation
 
     mixer = new THREE.AnimationMixer( panda );
     var clips = gltf.animations;
-
-    // Play a specific animation
-    // var clip = THREE.AnimationClip.findByName( clips, 'dance' );
-    // var action = mixer.clipAction( clip );
-    // action.play();
 
     // Play all animations
     clips.forEach( function ( clip ) {
@@ -112,20 +106,6 @@ function init() {
     update();
 
   });
-
-  // TEMP
-  /*
-  var cube = new THREE.Mesh(
-    new THREE.BoxGeometry(10, 10, 10),
-    new THREE.MeshBasicMaterial({
-        color: 0xff0000
-    })
-  );
-
-  cube.position.set(20, 0, 20);
-
-  scene.add(cube);
-  */
 
   // Lights
   ambientLight = new THREE.AmbientLight(0xaaaaaa);
@@ -158,7 +138,7 @@ function update() {
     this.reticle.update(0.5, 0.5);
   }
 
-  mixer.update( 0.1 ); // TODO delta seconds
+  mixer.update( 0.01 ); // TODO delta seconds
 
   renderer.clearColor();
   arView.render();
