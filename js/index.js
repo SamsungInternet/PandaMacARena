@@ -89,6 +89,7 @@ function init() {
   });
 
   // TEMP
+  /*
   var cube = new THREE.Mesh(
     new THREE.BoxGeometry(10, 10, 10),
     new THREE.MeshBasicMaterial({
@@ -99,6 +100,7 @@ function init() {
   cube.position.set(20, 0, 20);
 
   scene.add(cube);
+  */
 
   // Lights
   ambientLight = new THREE.AmbientLight(0xaaaaaa);
