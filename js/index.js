@@ -1,6 +1,9 @@
 /**
  * Made with help from the three.ar.js examples:
  * https://github.com/google-ar/three.ar.js/tree/master/examples
+ *
+ * And with help from Ada's logo test demo:
+ * https://glitch.com/edit/#!/logo-test
  */
 var vrDisplay,
     vrControls,
@@ -13,6 +16,9 @@ var vrDisplay,
     ambientLight,
     directionalLight,
     loadingMessage,
+    reticle,
+    mixer,
+    clock,
     raycaster = new THREE.Raycaster();
 
 // TEMP
@@ -47,7 +53,7 @@ function init() {
   var arDebug = new THREE.ARDebug(vrDisplay, scene, {
     showLastHit: false,
     showPoseStatus: false,
-    showPlanes: true,
+    showPlanes: false
   });
   document.body.appendChild(arDebug.getElement());
 
@@ -61,11 +67,13 @@ function init() {
     vrDisplay.depthFar
   );
 
+  initReticle();
+
   vrControls = new THREE.VRControls(camera);
 
   // Create the panda and add it to the scene.
   var loader = new THREE.GLTFLoader();
-  loader.load('models/panda.glb', function (gltf) {
+  loader.load('models/gltfanimationexporter.gltf', function (gltf) {
 
     console.log('Loaded panda model', gltf);
 
@@ -73,40 +81,40 @@ function init() {
 
     panda = gltf.scene;
 
+    console.log('gltf', gltf);
+
     // Scale to a more sensible size
-    panda.scale.set(3, 3, 3);
+    panda.scale.set(0.3, 0.3, 0.3);
 
     // Place far away, until we tap to place on a surface
     panda.position.set(10000, 10000, 10000);
+
+    // Animation
+
+    mixer = new THREE.AnimationMixer( panda );
+    var clips = gltf.animations;
+
+    // Play all animations
+    clips.forEach( function ( clip ) {
+      mixer.clipAction( clip ).play();
+    });
 
     scene.add(panda);
 
     window.addEventListener('resize', onWindowResize, false);
     canvas.addEventListener('touchstart', onClick, false);
 
+    clock = new THREE.Clock();
+
     update();
 
   });
-
-  // TEMP
-  /*
-  var cube = new THREE.Mesh(
-    new THREE.BoxGeometry(10, 10, 10),
-    new THREE.MeshBasicMaterial({
-        color: 0xff0000
-    })
-  );
-
-  cube.position.set(20, 0, 20);
-
-  scene.add(cube);
-  */
 
   // Lights
   ambientLight = new THREE.AmbientLight(0xaaaaaa);
   scene.add(ambientLight);
 
-  var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(1, 0, 1).normalize();
   scene.add(directionalLight);
 
@@ -114,7 +122,26 @@ function init() {
 
 }
 
+function initReticle() {
+
+  THREE.ARUtils.getARDisplay().then(function (display) {
+    if (display) {
+      reticle = new THREE.ARReticle(display, 0.03, 0.04, 0xff0077, 0.25);
+      scene.add(reticle);
+    } else {
+      console.log('No AR support');
+    }
+  });
+
+}
+
 function update() {
+
+  if (reticle) {
+    this.reticle.update(0.5, 0.5);
+  }
+
+  mixer.update( clock.getDelta() );
 
   renderer.clearColor();
   arView.render();
@@ -127,7 +154,6 @@ function update() {
   renderer.render(scene, camera);
 
   vrDisplay.requestAnimationFrame(update);
-
 }
 
 function onWindowResize () {
@@ -152,7 +178,7 @@ function onClick (e) {
 
   if (hit) {
     THREE.ARUtils.placeObjectAtHit(panda, hit, moveEasingValue, applyOrientation);
-    panda.rotation.y += Math.PI / 2;
+    panda.rotation.y += Math.PI;
   }
 }
 
