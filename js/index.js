@@ -18,6 +18,7 @@ var vrDisplay,
     loadingMessage,
     reticle,
     mixer,
+    clock,
     raycaster = new THREE.Raycaster();
 
 // TEMP
@@ -52,7 +53,7 @@ function init() {
   var arDebug = new THREE.ARDebug(vrDisplay, scene, {
     showLastHit: false,
     showPoseStatus: false,
-    showPlanes: true,
+    showPlanes: false
   });
   document.body.appendChild(arDebug.getElement());
 
@@ -103,6 +104,8 @@ function init() {
     window.addEventListener('resize', onWindowResize, false);
     canvas.addEventListener('touchstart', onClick, false);
 
+    clock = new THREE.Clock();
+
     update();
 
   });
@@ -138,7 +141,7 @@ function update() {
     this.reticle.update(0.5, 0.5);
   }
 
-  mixer.update( 0.01 ); // TODO delta seconds
+  mixer.update( clock.getDelta() );
 
   renderer.clearColor();
   arView.render();
@@ -175,7 +178,7 @@ function onClick (e) {
 
   if (hit) {
     THREE.ARUtils.placeObjectAtHit(panda, hit, moveEasingValue, applyOrientation);
-    panda.rotation.y += Math.PI / 2;
+    panda.rotation.y += Math.PI;
   }
 }
 
