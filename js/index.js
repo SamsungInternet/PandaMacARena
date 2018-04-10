@@ -1,6 +1,9 @@
 /**
  * Made with help from the three.ar.js examples:
  * https://github.com/google-ar/three.ar.js/tree/master/examples
+ * 
+ * And with help from Ada's logo test demo:
+ * https://glitch.com/edit/#!/logo-test
  */
 var vrDisplay,
     vrControls,
@@ -13,6 +16,7 @@ var vrDisplay,
     ambientLight,
     directionalLight,
     loadingMessage,
+    reticle,
     raycaster = new THREE.Raycaster();
 
 // TEMP
@@ -60,6 +64,8 @@ function init() {
     vrDisplay.depthNear,
     vrDisplay.depthFar
   );
+
+  initReticle();
 
   vrControls = new THREE.VRControls(camera);
 
@@ -114,7 +120,24 @@ function init() {
 
 }
 
+function initReticle() {
+
+  THREE.ARUtils.getARDisplay().then(function (display) {
+    if (display) {
+      reticle = new THREE.ARReticle(display, 0.03, 0.04, 0xff0077, 0.25);
+      scene.add(reticle);
+    } else {
+      console.log('No AR support');
+    }
+  });
+
+}
+
 function update() {
+
+  if (reticle) {
+    this.reticle.update(0.5, 0.5);
+  }
 
   renderer.clearColor();
   arView.render();
@@ -127,7 +150,6 @@ function update() {
   renderer.render(scene, camera);
 
   vrDisplay.requestAnimationFrame(update);
-
 }
 
 function onWindowResize () {
