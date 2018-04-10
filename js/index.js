@@ -19,6 +19,7 @@ var vrDisplay,
     reticle,
     mixer,
     clock,
+    music,
     raycaster = new THREE.Raycaster();
 
 // TEMP
@@ -28,6 +29,7 @@ window.onerror = function(msg, url, linenumber) {
 }
 
 THREE.ARUtils.getARDisplay().then(function (display) {
+
   if (display) {
     vrDisplay = display;
     init();
@@ -57,6 +59,9 @@ function init() {
   });
   document.body.appendChild(arDebug.getElement());
 
+  reticle = new THREE.ARReticle(vrDisplay, 0.03, 0.04, 0xff0077, 0.25);
+  scene.add(reticle);
+
   arView = new THREE.ARView(vrDisplay, renderer);
 
   camera = new THREE.ARPerspectiveCamera(
@@ -66,8 +71,6 @@ function init() {
     vrDisplay.depthNear,
     vrDisplay.depthFar
   );
-
-  initReticle();
 
   vrControls = new THREE.VRControls(camera);
 
@@ -118,20 +121,27 @@ function init() {
   directionalLight.position.set(1, 0, 1).normalize();
   scene.add(directionalLight);
 
-  loadingMessage = document.getElementById('loading');
+  // Music
 
-}
-
-function initReticle() {
-
-  THREE.ARUtils.getARDisplay().then(function (display) {
-    if (display) {
-      reticle = new THREE.ARReticle(display, 0.03, 0.04, 0xff0077, 0.25);
-      scene.add(reticle);
-    } else {
-      console.log('No AR support');
+  music = new Howl({
+    src: ['/music/macarena_s.wav', '/music/macarena_s.ogg', '/music/macarena_s.mp3'],
+    loop: true,
+    preload: true,
+    onplay: function() {
+      console.log('onplay');
+    },
+    onload: function() {
+      console.log('Music loaded');
+    },
+    onloaderror: function(err) {
+      console.log('Music load error', err);
+    },
+    onend: function() {
+      console.log('Finished playing!');
     }
   });
+
+  loadingMessage = document.getElementById('loading');
 
 }
 
@@ -162,6 +172,10 @@ function onWindowResize () {
   renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function playMusic() {
+  music.play();
+}
+
 function onClick (e) {
 
   if (!e.touches[0]) {
@@ -176,9 +190,12 @@ function onClick (e) {
   var moveEasingValue = 1;
   var applyOrientation = true;
 
+  console.log('hit?', hit);
+
   if (hit) {
     THREE.ARUtils.placeObjectAtHit(panda, hit, moveEasingValue, applyOrientation);
     panda.rotation.y += Math.PI;
+    playMusic();
   }
 }
 
