@@ -86,8 +86,8 @@ function init() {
 
     console.log('gltf', gltf);
 
-    // Scale to a more sensible size
-    panda.scale.set(0.3, 0.3, 0.3);
+    // Scale to a table-top size for now (in the future could scale based on how far away?)
+    panda.scale.set(0.08, 0.08, 0.08);
 
     // Place far away, until we tap to place on a surface
     panda.position.set(10000, 10000, 10000);
@@ -122,23 +122,9 @@ function init() {
   scene.add(directionalLight);
 
   // Music
-
   music = new Howl({
     src: ['/music/macarena_s.ogg', '/music/macarena_s.mp3', '/music/macarena_s.wav'],
-    loop: true,
-    preload: true,
-    onplay: function() {
-      console.log('onplay');
-    },
-    onload: function() {
-      console.log('Music loaded');
-    },
-    onloaderror: function(err) {
-      console.log('Music load error', err);
-    },
-    onend: function() {
-      console.log('Finished playing!');
-    }
+    preload: true
   });
 
   loadingMessage = document.getElementById('loading');
