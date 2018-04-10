@@ -17,6 +17,7 @@ var vrDisplay,
     directionalLight,
     loadingMessage,
     reticle,
+    mixer,
     raycaster = new THREE.Raycaster();
 
 // TEMP
@@ -71,7 +72,7 @@ function init() {
 
   // Create the panda and add it to the scene.
   var loader = new THREE.GLTFLoader();
-  loader.load('models/panda.glb', function (gltf) {
+  loader.load('models/gltfanimationexporter.gltf', function (gltf) {
 
     console.log('Loaded panda model', gltf);
 
@@ -79,11 +80,29 @@ function init() {
 
     panda = gltf.scene;
 
+    console.log('gltf', gltf);
+
     // Scale to a more sensible size
     panda.scale.set(3, 3, 3);
 
     // Place far away, until we tap to place on a surface
-    panda.position.set(10000, 10000, 10000);
+    //panda.position.set(10000, 10000, 10000);
+    panda.position.set(0, 1, 10);
+
+    // Animation
+
+    mixer = new THREE.AnimationMixer( panda );
+    var clips = gltf.animations;
+
+    // Play a specific animation
+    // var clip = THREE.AnimationClip.findByName( clips, 'dance' );
+    // var action = mixer.clipAction( clip );
+    // action.play();
+
+    // Play all animations
+    clips.forEach( function ( clip ) {
+      mixer.clipAction( clip ).play();
+    });
 
     scene.add(panda);
 
@@ -138,6 +157,8 @@ function update() {
   if (reticle) {
     this.reticle.update(0.5, 0.5);
   }
+
+  mixer.update( 0.1 ); // TODO delta seconds
 
   renderer.clearColor();
   arView.render();
