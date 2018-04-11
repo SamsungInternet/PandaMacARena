@@ -5,7 +5,7 @@
  * And with help from Ada's logo test demo:
  * https://glitch.com/edit/#!/logo-test
  */
-var vrDisplay,
+var arDisplay,
     vrControls,
     arView,
     canvas,
@@ -22,19 +22,12 @@ var vrDisplay,
     music,
     raycaster = new THREE.Raycaster();
 
-// TEMP
-window.onerror = function(msg, url, linenumber) {
-  alert('Error message: ' + msg + '\nURL: ' + url + '\nLine Number: ' + linenumber);
-  return true;
-}
-
 THREE.ARUtils.getARDisplay().then(function (display) {
 
   if (display) {
-    vrDisplay = display;
+    arDisplay = display;
     init();
   } else {
-    console.warn('Unsupported');
     THREE.ARUtils.displayUnsupportedMessage();
   }
 });
@@ -52,24 +45,24 @@ function init() {
   scene = new THREE.Scene();
 
   // Show surfaces
-  var arDebug = new THREE.ARDebug(vrDisplay, scene, {
+  var arDebug = new THREE.ARDebug(arDisplay, scene, {
     showLastHit: false,
     showPoseStatus: false,
     showPlanes: false
   });
   document.body.appendChild(arDebug.getElement());
 
-  reticle = new THREE.ARReticle(vrDisplay, 0.03, 0.04, 0xff0077, 0.25);
+  reticle = new THREE.ARReticle(arDisplay, 0.03, 0.04, 0xff0077, 0.25);
   scene.add(reticle);
 
-  arView = new THREE.ARView(vrDisplay, renderer);
+  arView = new THREE.ARView(arDisplay, renderer);
 
   camera = new THREE.ARPerspectiveCamera(
-    vrDisplay,
+    arDisplay,
     60,
     window.innerWidth / window.innerHeight,
-    vrDisplay.depthNear,
-    vrDisplay.depthFar
+    arDisplay.depthNear,
+    arDisplay.depthFar
   );
 
   vrControls = new THREE.VRControls(camera);
@@ -83,8 +76,6 @@ function init() {
     loadingMessage.style.display = 'none';
 
     panda = gltf.scene;
-
-    console.log('gltf', gltf);
 
     // Scale to a table-top size for now (in the future could scale based on how far away?)
     panda.scale.set(0.08, 0.08, 0.08);
@@ -149,7 +140,7 @@ function update() {
   renderer.clearDepth();
   renderer.render(scene, camera);
 
-  vrDisplay.requestAnimationFrame(update);
+  arDisplay.requestAnimationFrame(update);
 }
 
 function onWindowResize () {
@@ -176,8 +167,6 @@ function onClick (e) {
   var moveEasingValue = 1;
   var applyOrientation = true;
 
-  console.log('hit?', hit);
-
   if (hit) {
     THREE.ARUtils.placeObjectAtHit(panda, hit, moveEasingValue, applyOrientation);
     panda.rotation.y += Math.PI;
@@ -193,7 +182,7 @@ function hitTestSurface(x, y) {
   var normalisedY = y / window.innerHeight;
 
   // Send a ray from point of click to real world surface and attempt to find a hit. Returns an array of potential hits.
-  var hits = vrDisplay.hitTest(normalisedX, normalisedY);
+  var hits = arDisplay.hitTest(normalisedX, normalisedY);
 
   // If a hit is found, just use the first one
   return (hits && hits.length) ? hits[0] : null;
