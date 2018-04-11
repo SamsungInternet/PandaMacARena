@@ -5,7 +5,7 @@
  * And with help from Ada's logo test demo:
  * https://glitch.com/edit/#!/logo-test
  */
-var arDisplay,
+let arDisplay,
     vrControls,
     arView,
     canvas,
@@ -19,11 +19,11 @@ var arDisplay,
     reticle,
     mixer,
     clock,
-    music,
-    raycaster = new THREE.Raycaster();
+    music;
 
-THREE.ARUtils.getARDisplay().then(function (display) {
+const raycaster = new THREE.Raycaster();
 
+THREE.ARUtils.getARDisplay().then(display => {
   if (display) {
     arDisplay = display;
     init();
@@ -45,7 +45,7 @@ function init() {
   scene = new THREE.Scene();
 
   // Show surfaces
-  var arDebug = new THREE.ARDebug(arDisplay, scene, {
+  const arDebug = new THREE.ARDebug(arDisplay, scene, {
     showLastHit: false,
     showPoseStatus: false,
     showPlanes: false
@@ -68,8 +68,8 @@ function init() {
   vrControls = new THREE.VRControls(camera);
 
   // Create the panda and add it to the scene.
-  var loader = new THREE.GLTFLoader();
-  loader.load('models/gltfanimationexporter.gltf', function (gltf) {
+  const loader = new THREE.GLTFLoader();
+  loader.load('models/gltfanimationexporter.gltf', gltf => {
 
     console.log('Loaded panda model', gltf);
 
@@ -86,7 +86,7 @@ function init() {
     // Animation
 
     mixer = new THREE.AnimationMixer( panda );
-    var clips = gltf.animations;
+    const clips = gltf.animations;
 
     // Play all animations
     clips.forEach( function ( clip ) {
@@ -159,13 +159,13 @@ function onClick (e) {
     return;
   }
 
-  var x = e.touches[0].pageX;
-  var y = e.touches[0].pageY;
+  const x = e.touches[0].pageX;
+  const y = e.touches[0].pageY;
 
-  var hit = hitTestSurface(x, y);
+  const hit = hitTestSurface(x, y);
 
-  var moveEasingValue = 1;
-  var applyOrientation = true;
+  const moveEasingValue = 1;
+  const applyOrientation = true;
 
   if (hit) {
     THREE.ARUtils.placeObjectAtHit(panda, hit, moveEasingValue, applyOrientation);
@@ -178,11 +178,11 @@ function hitTestSurface(x, y) {
 
   // We need to transform x and y into being between 0 and 1
 
-  var normalisedX = x / window.innerWidth;
-  var normalisedY = y / window.innerHeight;
+  const normalisedX = x / window.innerWidth;
+  const normalisedY = y / window.innerHeight;
 
   // Send a ray from point of click to real world surface and attempt to find a hit. Returns an array of potential hits.
-  var hits = arDisplay.hitTest(normalisedX, normalisedY);
+  const hits = arDisplay.hitTest(normalisedX, normalisedY);
 
   // If a hit is found, just use the first one
   return (hits && hits.length) ? hits[0] : null;
