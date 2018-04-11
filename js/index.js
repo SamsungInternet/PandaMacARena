@@ -125,7 +125,7 @@ function init() {
 function update() {
 
   if (reticle) {
-    this.reticle.update(0.5, 0.5);
+    reticle.update(0.5, 0.5);
   }
 
   mixer.update( clock.getDelta() );
