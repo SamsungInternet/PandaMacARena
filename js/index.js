@@ -89,7 +89,7 @@ function init() {
     const clips = gltf.animations;
 
     // Play all animations
-    clips.forEach( function ( clip ) {
+    clips.forEach( clip => {
       mixer.clipAction( clip ).play();
     });
 
