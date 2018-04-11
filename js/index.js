@@ -153,7 +153,7 @@ function playMusic() {
   music.play();
 }
 
-function onClick (e) {
+function onClick(e) {
 
   if (!e.touches[0]) {
     return;
