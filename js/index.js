@@ -114,7 +114,7 @@ function init() {
 
   // Music
   music = new Howl({
-    src: ['/music/macarena_s.ogg', '/music/macarena_s.mp3', '/music/macarena_s.wav'],
+    src: ['music/macarena_s.ogg', 'music/macarena_s.mp3', 'music/macarena_s.wav'],
     preload: true
   });
 
