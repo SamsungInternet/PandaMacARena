@@ -150,7 +150,9 @@ function onWindowResize () {
 }
 
 function playMusic() {
-  music.play();
+  if (!Howl.playing()) {
+    music.play();
+  }
 }
 
 function onClick(e) {
