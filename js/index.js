@@ -15,7 +15,6 @@ let arDisplay,
     panda,
     ambientLight,
     directionalLight,
-    loadingMessage,
     reticle,
     mixer,
     clock,
@@ -73,8 +72,6 @@ function init() {
 
     console.log('Loaded panda model', gltf);
 
-    loadingMessage.style.display = 'none';
-
     panda = gltf.scene;
 
     // Scale to a table-top size for now (in the future could scale based on how far away?)
@@ -117,8 +114,6 @@ function init() {
     src: ['music/macarena_s.ogg', 'music/macarena_s.mp3', 'music/macarena_s.wav'],
     preload: true
   });
-
-  loadingMessage = document.getElementById('loading');
 
 }
 
