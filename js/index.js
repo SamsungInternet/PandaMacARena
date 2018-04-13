@@ -145,7 +145,7 @@ function onWindowResize () {
 }
 
 function playMusic() {
-  if (!Howl.playing()) {
+  if (!music.playing()) {
     music.play();
   }
 }
