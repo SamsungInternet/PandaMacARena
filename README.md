@@ -1,6 +1,6 @@
 # Panda MacARena
 
-An WebAR dancing panda demo.
+A WebAR dancing panda demo.
 
 ![A screenshot of Panda MacARena](docs/animated-2018-04.gif)
 
